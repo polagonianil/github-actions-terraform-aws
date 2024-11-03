@@ -1,0 +1,34 @@
+name: 'Terraform Destroy'
+on:
+  workflow_dispatch:  # Allows manual triggering from GitHub UI
+  pull_request:
+    branches: [ "main" ]  # Optional, if you want to trigger destroy on specific events
+
+jobs:
+  terraform-destroy:
+    name: 'Terraform Destroy'
+    env:
+      # AWS secrets
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '0.14.3'
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+
+      # Destroy Terraform resources
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var="instance_type=t2.micro"
