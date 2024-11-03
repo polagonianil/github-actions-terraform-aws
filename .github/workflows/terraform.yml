@@ -28,10 +28,10 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # Plan Terraform
+      # Plan Terraform with variable
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var="instance_type=t2.micro"
 
-      # Apply Terraform
+      # Apply Terraform with variable
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="instance_type=t2.micro"
