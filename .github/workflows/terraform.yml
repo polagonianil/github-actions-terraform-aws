@@ -3,6 +3,9 @@ on:
   push:
     branches: [ "main" ]
 
+  pull_request:
+    branches: [ "main" ]  # Runs when a PR targets the main branch  
+
 jobs:
   terraform:
     name: 'Terraform'
