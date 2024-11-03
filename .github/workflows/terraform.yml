@@ -1,7 +1,9 @@
 name: 'Terraform'
 on:
+  pull_request:
+    branches: [ "main" ]  # Runs when a PR targets the main branch
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Runs when a branch is merged to main
 
 jobs:
   terraform:
@@ -28,10 +30,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # Plan Terraform with variable
-      - name: Terraform Plan
+      # Conditional Steps for Pull Request and Push to Main
+      - name: Terraform Plan (on Pull Request)
+        if: github.event_name == 'pull_request'
         run: terraform plan -var="instance_type=t2.micro"
 
-      # Apply Terraform with variable
-      - name: Terraform Apply
+      - name: Terraform Apply (on Merge to Main)
+        if: github.event_name == 'push'
         run: terraform apply -auto-approve -var="instance_type=t2.micro"
